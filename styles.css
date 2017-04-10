@@ -178,3 +178,60 @@ body {
     max-width: 490px;
 }
 
+@media only screen and (max-width: 775px) {
+    .mobile-button {
+        display: block;
+    }
+
+    .search-bar {
+        top: 10px;
+        padding: 7px;
+    }
+
+    .results {
+        display: none;
+    }
+
+    .places-list {
+        max-height: 400px;
+    }
+
+    .search-bar input {
+        width: 108px;
+        font-size: 12px;
+    }
+
+    .submit-btn {
+        width: 45px;
+    }
+
+    .status-msg {
+        padding: 0 18px;
+        font-size: 16px;
+    }
+
+    .search-btn, .loc-btn {
+        display: inline;
+    }
+
+    .loc-btn-large {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 499px) {
+    .mobile-results {
+        right: 10%;
+        width: 65%;
+    }
+}
+
+
+/*Autocomplete styles*/
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-no-suggestion { padding: 2px 5px;}
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: bold; color: #19C1CF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000; }
