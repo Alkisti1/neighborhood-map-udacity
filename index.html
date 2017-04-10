@@ -2,14 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="styles.css" rel="stylesheet">
     <title>Neighborhood Map</title>
 </head>
 <body>
     <div id="map"></div>
+    <!-- Search Bar -->
+    <div class="search-bar" data-bind="visible: searchBarShow() === true">
+        <form data-bind="submit: processLocationSearch">
+            <input type="text" placeholder="Find Restaurants in your area" data-bind="value: searchLocation, selectOnFocus: true" id="auto-complete">
+            <input type="submit" value="Go!" class="submit-btn">
+            <p data-bind="text: searchStatus"></p>
+        </form>
+        <form data-bind="submit: filterResults" class="search-form">
+            <input type="text" placeholder="Filter by name or type" data-bind="value:filterKeyword, selectOnFocus: true">
+            <input type="submit" value="Find!" class="submit-btn">
+            <p data-bind="visible: filterKeyword().length > 0, click: clearFilter" class="clear-button">Clear filter</p>
+        </form>
+    </div>
+    <!-- Center Map Button -->
+    <div class="loc-btn-large" data-bind="click: centerMap">
+        <i class="fa fa-compass fa-2x"></i>
+    </div>
+    <!-- List -->
+    <div class="list">
+        <div>
+            <h2 class="status-msg" data-bind="text: restaurantsFound"></h2>
+            <span class="toggler" data-bind="text: toggleSymbol, click: listToggle"></span>
+        </div>
+        <div>
+            <p class="waiting" data-bind="html: loadImg"></p>
+            <ul class="places-list" data-bind="visible: toggleSymbol() === 'hide', foreach: filteredList">
+                <li data-bind="click: $parent.goToMarker">
+                    <h4 data-bind="text: restaurantName"></h4>
+                    <p class="address" data-bind="html: restaurantAddress"></p>
+                    <p data-bind="text: restaurantShortBlurb"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- Mobile Menu View: Displays Search and List Elements -->
+    <div class="search-btn" data-bind="click: searchToggle">
+        <i class="fa fa-search"></i>
+    </div>
+    <div class="loc-btn" data-bind="click: centerMap">
+        <i class="fa fa-compass"></i>
+    </div>
+    <div class="mobile-button" data-bind="click: mobileToggleList">
+        <i class="fa fa-bars"></i>
+    </div>
+    <div class="mobile-results" data-bind="visible: mobileShow() === true">
+        <div>
+            <h2 class="status-msg" data-bind="text: dealStatus"></h2>
+        </div>
+        <div class="mobile-results">
+            <p class="waiting" data-bind="html: loadImg"></p>
+            <ul class="places-list" data-bind="visible: toggleSymbol() === 'hide', foreach: filteredList">
+                <li data-bind="click: $parent.goToMarker">
+                    <h4 data-bind="text: restaurantName"></h4>
+                    <p class="address" data-bind="html: restaurantAddress"></p>
+                    <p data-bind="text: restaurantShortBlurb"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
     <script src="app.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCtiyQRuWb9RKoFWc5m85G5Hs5gfS-Mop8&v=3&callback=initMap"></script>
