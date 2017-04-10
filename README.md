@@ -1,6 +1,6 @@
 # Project 5: Neighborhood Map
 
-## What it is
+## What It Is
 This Web Application showcases a Chicago neighborhood with 5 default markers provided with more information when clicked.
 
 ## Features
@@ -13,7 +13,7 @@ location, and animates its associated map marker by bouncing.
 
 
 ## Required Libraries and Dependencies
-**** Everything is already included ****
+**** Everything is already included (Device and Browser is your responsibility!) ****
 
 * Internet Connected Device
 * Modern Web Browser
@@ -23,7 +23,7 @@ location, and animates its associated map marker by bouncing.
 * jQuery
 * Bootstrap
 
-## Project contents
+## Project Contents
 This project consists the following files and directories:
 
 * `index.html` - The main html file that displays the map and is attached to all of the js scripts and stylesheets.
@@ -33,5 +33,5 @@ This project consists the following files and directories:
 
 
 ## Credits:
-* Mike Fowler for Apple Maps CSS: https://snazzymaps.com/style/42/apple-maps-esque
+* Mike Fowler for Google Maps Apple-inspired CSS: https://snazzymaps.com/style/42/apple-maps-esque
 
