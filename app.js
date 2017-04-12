@@ -1,6 +1,7 @@
 /*******************************
- Google Maps API
+ Other
  *******************************/
+var self = this;
 // Creates a global map marker
 var map;
 // Create a new blank array for all the listing markers.
@@ -9,6 +10,9 @@ var markers = [];
 // over the number of places that show.
 var placeMarkers = [];
 
+/*******************************
+ Google Maps API
+ *******************************/
 function initMap() {
     // Create a styles array to use with the map.
     var styles = [{
@@ -80,7 +84,6 @@ function initMap() {
         mapTypeControl: false
     });
 }
-
 /*******************************
  Yelp API
  *******************************/
