@@ -1,8 +1,7 @@
 /*******************************
- Other
+ Global Variables
  *******************************/
 var self = this;
-
 // Creates a global map marker
 var map;
 
@@ -13,10 +12,16 @@ var markers = [];
 // over the number of places that show.
 var placeMarkers = [];
 
+// Creates a Global variable for all of the locations
+var location;
+
+// Declaring Global clientID & Secret for Foursquare API
+var clientID;
+var clientSecret;
+
 /*******************************
  Google Maps API
  *******************************/
-
 var defaultLocations = [
     {
         name: 'Winnemac Park',
@@ -48,7 +53,51 @@ var defaultLocations = [
     }
 ];
 
+/*******************************
+ Foursquare API
+ *******************************/
 
+function model() {
+    location = function (data) {
+        var self = this;
+        this.name = data.name;
+        this.lat = data.lat;
+        this.long = data.long;
+        this.URL = "";
+        this.street = "";
+        this.city = "";
+        this.phone = "";
+
+        this.visible = ko.observable(true);
+
+        var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
+
+        $.getJSON(foursquareURL).done(function (data) {
+            var results = data.response.venues[0];
+            self.URL = results.url;
+            if (typeof self.URL === 'undefined') {
+                self.URL = "";
+            }
+            self.street = results.location.formattedAddress[0];
+            self.city = results.location.formattedAddress[1];
+            self.phone = results.contact.phone;
+            if (typeof self.phone === 'undefined') {
+                self.phone = "";
+            } else {
+                self.phone = formatPhone(self.phone);
+            }
+        }).fail(function () {
+            alert("There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.");
+        });
+
+        this.contentString = '<div class="info-window-content"><div class="title"><b>' + data.name + "</b></div>" +
+            '<div class="content"><a href="' + self.URL + '">' + self.URL + "</a></div>" +
+            '<div class="content">' + self.street + "</div>" +
+            '<div class="content">' + self.city + "</div>" +
+            '<div class="content">' + self.phone + "</div></div>";
+    };
+    initMap();
+}
 
 function initMap() {
     // Create a styles array to use with the map.
@@ -134,7 +183,7 @@ function initMap() {
         mapTypeControl: false
     });
 
-    //
+    // If map loads this will clear out the timeout error.
     clearTimeout(self.errorHandlingMap);
 
     // The following group uses the location array to create an array of markers on initialize.
@@ -188,6 +237,7 @@ function populateInfoWindow(marker, infowindow) {
         });
     }
 }
-/*******************************
- Yelp API
- *******************************/
+
+function startApp() {
+    ko.applyBindings(new model());
+}
