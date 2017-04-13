@@ -1,105 +1,130 @@
 /*******************************
- Global Variables
+ Global Variables & Default Locations
  *******************************/
-var self = this;
 // Creates a global map marker
 var map;
 
-// Create a new blank array for all the listing markers.
-var markers = [];
-
-// Create placemarkers array to use in multiple functions to have control
-// over the number of places that show.
-var placeMarkers = [];
-
 // Creates a Global variable for all of the locations
-var location;
+var Location;
 
-// Declaring Global clientID & Secret for Foursquare API
+// Declaring Global clientID & secret for Foursquare API
 var clientID;
 var clientSecret;
 
-/*******************************
- Google Maps API
- *******************************/
+// Default Locations when app is first run
 var defaultLocations = [
     {
         name: 'Winnemac Park',
-        location: {lat: 41.9741, lng: -87.6820}
+        lat: 41.9741, long: -87.6820
     },
     {
         name: 'Over Easy Cafe',
-        location: {lat: 41.9718, lng: -87.6790}
+        lat: 41.9718, long: -87.6790
     },
     {
         name: 'Bang Bang Pie',
-        location: {lat: 41.9720, lng: -87.6790}
+        lat: 41.9720, long: -87.6790
     },
     {
         name: 'Roots Handmade Pizza',
-        location: {lat: 41.9689, lng: -87.6842}
+        lat: 41.9689, long: -87.6842
     },
     {
         name: 'Mariano\'s',
-        location: {lat: 41.9693, lng: -87.6749}
+        lat: 41.9693, long: -87.6749
     },
     {
         name: 'Wendys',
-        location: {lat: 41.9685, lng: -87.6812}
+        lat: 41.9685, long: -87.6812
     },
     {
         name: 'Aroy Thai',
-        location: {lat: 41.9667, lng: -87.6793}
+        lat: 41.9667, long: -87.6793
     }
 ];
 
 /*******************************
  Foursquare API
  *******************************/
+Location = function(data) {
+    var self = this;
+    this.name = data.name;
+    this.lat = data.lat;
+    this.long = data.long;
+    this.URL = "";
+    this.street = "";
+    this.city = "";
+    this.phone = "";
 
-function model() {
-    location = function (data) {
-        var self = this;
-        this.name = data.name;
-        this.lat = data.lat;
-        this.long = data.long;
-        this.URL = "";
-        this.street = "";
-        this.city = "";
-        this.phone = "";
+    this.visible = ko.observable(true);
 
-        this.visible = ko.observable(true);
+    var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
 
-        var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
+    $.getJSON(foursquareURL).done(function (data) {
+        var results = data.response.venues[0];
+        self.URL = results.url;
+        if (typeof self.URL === 'undefined') {
+            self.URL = "";
+        }
+        self.street = results.location.formattedAddress[0];
+        self.city = results.location.formattedAddress[1];
+        self.phone = results.contact.phone;
+    }).fail(function () {
+        $('.list').html('There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.');
+    });
 
-        $.getJSON(foursquareURL).done(function (data) {
-            var results = data.response.venues[0];
-            self.URL = results.url;
-            if (typeof self.URL === 'undefined') {
-                self.URL = "";
-            }
-            self.street = results.location.formattedAddress[0];
-            self.city = results.location.formattedAddress[1];
-            self.phone = results.contact.phone;
-            if (typeof self.phone === 'undefined') {
-                self.phone = "";
-            } else {
-                self.phone = formatPhone(self.phone);
-            }
-        }).fail(function () {
-            alert("There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.");
-        });
+    this.contentString = '<div class="info-window-content"><div class="title"><b>' + data.name + "</b></div>" +
+        '<div class="content"><a href="' + self.URL + '">' + self.URL + "</a></div>" +
+        '<div class="content">' + self.street + "</div>" +
+        '<div class="content">' + self.city + "</div>" +
+        '<div class="content">' + self.phone + "</div></div>";
 
-        this.contentString = '<div class="info-window-content"><div class="title"><b>' + data.name + "</b></div>" +
-            '<div class="content"><a href="' + self.URL + '">' + self.URL + "</a></div>" +
+    this.infoWindow = new google.maps.InfoWindow({content: self.contentString});
+
+    this.marker = new google.maps.Marker({
+        position: new google.maps.LatLng(data.lat, data.long),
+        map: map,
+        title: data.name
+    });
+
+    this.showMarker = ko.computed(function() {
+        if(this.visible() === true) {
+            this.marker.setMap(map);
+        } else {
+            this.marker.setMap(null);
+        }
+        return true;
+    }, this);
+
+    this.marker.addListener('click', function(){
+        self.contentString = '<div class="info-window-content"><div class="title"><b>' + data.name + "</b></div>" +
+            '<div class="content"><a href="' + self.URL +'">' + self.URL + "</a></div>" +
             '<div class="content">' + self.street + "</div>" +
             '<div class="content">' + self.city + "</div>" +
-            '<div class="content">' + self.phone + "</div></div>";
-    };
-    initMap();
-}
+            '<div class="content"><a href="tel:' + self.phone +'">' + self.phone +"</a></div></div>";
 
-function initMap() {
+        self.infoWindow.setContent(self.contentString);
+
+        self.infoWindow.open(map, this);
+
+        self.marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() {
+            self.marker.setAnimation(null);
+        }, 2100);
+    });
+
+    this.bounce = function(place) {
+        google.maps.event.trigger(self.marker, 'click');
+    };
+};
+
+/*******************************
+ Google Maps API
+ *******************************/
+function viewModel(){
+
+    var self = this;
+
     // Create a styles array to use with the map.
     var styles = [{
         "featureType": "landscape.man_made",
@@ -163,17 +188,14 @@ function initMap() {
         "stylers": [{"color": "#a2daf2"}]
     }];
 
+    this.searchTerm = ko.observable("");
+
+    this.locationList = ko.observableArray([]);
+
     // Error handling if map doesn't load.
     this.errorHandlingMap = setTimeout(function(){
         $('#map').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
     });
-
-    // Initializes a new infowindow to store information inside of it.
-    var largeInfowindow = new google.maps.InfoWindow();
-
-    // Initializes a rectangle from the points at its south-west and north-east corners.
-    // Basically makes all the markers fit from the users point of view.
-    var bounds = new google.maps.LatLngBounds();
 
     // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
@@ -186,58 +208,35 @@ function initMap() {
     // If map loads this will clear out the timeout error.
     clearTimeout(self.errorHandlingMap);
 
-    // The following group uses the location array to create an array of markers on initialize.
-    for (var i = 0; i < defaultLocations.length; i++) {
+    // Foursquare API settings
+    clientID = "YA5YCGZRA414QRZ2HR4GG24H5Y45LNSLO02Z1C3BJ3N4CCWH";
+    clientSecret = "X50UXR4JITKLCC5VBEERFFT5LMGTTHIROU1ZDEZBFWMJEITO";
 
-        // Get the position from the location array.
-        var position = defaultLocations[i].location;
+    defaultLocations.forEach(function(locationItem){
+        self.locationList.push( new Location(locationItem));
+    });
 
-        // Gets the name from the location array.
-        var name = defaultLocations[i].name;
+    this.filteredList = ko.computed( function() {
+        var filter = self.searchTerm().toLowerCase();
+        if (!filter) {
+            self.locationList().forEach(function(locationItem){
+                locationItem.visible(true);
+            });
+            return self.locationList();
+        } else {
+            return ko.utils.arrayFilter(self.locationList(), function(locationItem) {
+                var string = locationItem.name.toLowerCase();
+                var result = (string.search(filter) >= 0);
+                locationItem.visible(result);
+                return result;
+            });
+        }
+    }, self);
 
-        // Create a marker per location, and put into markers array.
-        var marker = new google.maps.Marker({
-            map: map,
-            position: position,
-            title: name,
-            animation: google.maps.Animation.DROP,
-            id: i
-        });
-
-        // Push the marker to our array of markers.
-        markers.push(marker);
-
-        // Create an onclick event to open an infowindow at each marker.
-        marker.addListener('click', function() {
-            populateInfoWindow(this, largeInfowindow);
-        });
-        bounds.extend(markers[i].position);
-    }
-
-    // Extend the boundaries of the map for each marker
-    map.fitBounds(bounds);
-}
-
-
-
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
-function populateInfoWindow(marker, infowindow) {
-
-    // Check to make sure the infowindow is not already opened on this marker.
-    if (infowindow.marker != marker) {
-        infowindow.marker = marker;
-        infowindow.setContent('<div>' + marker.title + '</div>');
-        infowindow.open(map, marker);
-
-        // Make sure the marker property is cleared if the infowindow is closed.
-        infowindow.addListener('closeclick',function(){
-            infowindow.setMarker = null;
-        });
-    }
+    this.mapElem = document.getElementById('map');
+    this.mapElem.style.height = window.innerHeight - 50;
 }
 
 function startApp() {
-    ko.applyBindings(new model());
+    ko.applyBindings(new viewModel());
 }

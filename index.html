@@ -4,32 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Neighborhood Map</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="map"></div>
+    <div class="map" id="map"></div>
     <!-- Search Bar -->
-    <div class="search-bar">
-        <form>
-            <input type="text" placeholder="Find Restaurants in your area" id="auto-complete">
-            <input type="submit" value="Go!" class="submit-btn">
-        </form>
-        <form class="search-form">
-            <input type="text" placeholder="Filter by name or type">
-            <input type="submit" value="Find!" class="submit-btn">
-            <p class="clear-button">Clear filter</p>
-        </form>
+    <div class="search" id="search">
+        <input placeholder="Search Your Place of Interest" class="search-box" id="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'" />
     </div>
     <!-- Center Map Button -->
     <div class="loc-btn-large">
         <i class="fa fa-compass fa-2x"></i>
     </div>
     <!-- List -->
-    <div class="list">
+    <div class="list" id="list">
         <h1 class="text-center">Results</h1>
-        <ul class="places-list text-center" data-bind="foreach: filteredList">
+        <ul class="results" id="results" data-bind="foreach: filteredList">
             <li class="place" id="place" data-bind="text: name, click: bounce"></li>
         </ul>
     </div>
@@ -37,6 +29,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCtiyQRuWb9RKoFWc5m85G5Hs5gfS-Mop8&v=3&callback=model"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCtiyQRuWb9RKoFWc5m85G5Hs5gfS-Mop8&v=3&callback=startApp"></script>
 </body>
 </html>
