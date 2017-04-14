@@ -67,7 +67,7 @@ Location = function(data) {
     // Foursquare API Link to call.
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
 
-    // Gets the data from foursquare and store it into it's own variables.
+    // Gets the data from foursquare and store it into its' own variables.
     $.getJSON(foursquareURL).done(function (data) {
         var results = data.response.venues[0];
         self.URL = results.url;
@@ -234,7 +234,7 @@ function viewModel(){
         self.locationList.push( new Location(locationItem));
     });
 
-    // Searches for what user typed in the input bar to the locationlist array.
+    // Searches for what user typed in the input bar using the locationlist array.
     // Only displaying the exact item results that user type if available in the locationlist array.
     this.filteredList = ko.computed( function() {
         var filter = self.searchTerm().toLowerCase();
