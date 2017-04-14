@@ -13,7 +13,6 @@ location, and animates its associated map marker by bouncing.
 
 Center Map: A compass icon that whenever clicked on reverts user back to the main focus of the map.
 
-
 ## Required Libraries and Dependencies
 **** Everything is already included (Device and Browser is your responsibility!) ****
 
@@ -33,7 +32,13 @@ This project consists the following files and directories:
 * `README.md` - This read me file.
 * `app.js` - Javascript file that contains the Google Maps API, Foursquare API and Knockout JS code.
 
-
 ## Credits:
 * Mike Fowler for Google Maps Apple-inspired CSS: https://snazzymaps.com/style/42/apple-maps-esque
 
+## Resources Used:
+* StackOverflow
+* Udacity Javascript Design Patterns Course
+* Udacity Intro to AJAX Course
+* Knockout JS Documentation & Tutorials
+* Google Maps API Documentation
+* Foursquare API Documentation

@@ -2,6 +2,9 @@
  Global Variables & Default Locations
  *******************************/
 
+// TODO: Comment every line of code
+// TODO: Try to refactor certain lines of code
+
 // Creates a global map marker
 var map;
 
