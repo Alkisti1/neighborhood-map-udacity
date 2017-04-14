@@ -2,9 +2,6 @@
  Global Variables & Default Locations
  *******************************/
 
-// TODO: Comment every line of code
-// TODO: Try to refactor certain lines of code
-
 // Creates a global map marker
 var map;
 
@@ -60,14 +57,17 @@ Location = function(data) {
     this.city = "";
     this.phone = "";
 
+    // By default every marker will be visible
     this.visible = ko.observable(true);
 
-    // Foursquare API settings
+    // Foursquare API credentials.
     clientID = "YA5YCGZRA414QRZ2HR4GG24H5Y45LNSLO02Z1C3BJ3N4CCWH";
     clientSecret = "X50UXR4JITKLCC5VBEERFFT5LMGTTHIROU1ZDEZBFWMJEITO";
 
+    // Foursquare API Link to call.
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
 
+    // Gets the data from foursquare and store it into it's own variables.
     $.getJSON(foursquareURL).done(function (data) {
         var results = data.response.venues[0];
         self.URL = results.url;
@@ -81,20 +81,24 @@ Location = function(data) {
         $('.list').html('There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.');
     });
 
+    // This is what the infowindow will contain when clicked.
     this.contentString = '<div class="info-window-content"><div class="title"><b>' + data.name + "</b></div>" +
         '<div class="content"><a href="' + self.URL + '">' + self.URL + "</a></div>" +
         '<div class="content">' + self.street + "</div>" +
         '<div class="content">' + self.city + "</div>" +
         '<div class="content">' + self.phone + "</div></div>";
 
+    // Puts the content string inside infowindow.
     this.infoWindow = new google.maps.InfoWindow({content: self.contentString});
 
+    // Places the marker to it's designed location on the map along with it's title.
     this.marker = new google.maps.Marker({
         position: new google.maps.LatLng(data.lat, data.long),
         map: map,
         title: data.name
     });
 
+    // Only makes the one selected marker visible.
     this.showMarker = ko.computed(function() {
         if(this.visible() === true) {
             this.marker.setMap(map);
@@ -104,6 +108,7 @@ Location = function(data) {
         return true;
     }, this);
 
+    // When marker is clicked on open up infowindow designated to the marker with it's information.
     this.marker.addListener('click', function(){
         self.contentString = '<div class="info-window-content"><div class="title"><b>' + data.name + "</b></div>" +
             '<div class="content"><a href="' + self.URL +'">' + self.URL + "</a></div>" +
@@ -121,6 +126,7 @@ Location = function(data) {
         }, 2100);
     });
 
+    // Makes the marker bounce animation whenever clicked.
     this.bounce = function(place) {
         google.maps.event.trigger(self.marker, 'click');
     };
@@ -132,6 +138,17 @@ Location = function(data) {
 function viewModel(){
 
     var self = this;
+
+    // Search term is blank by default
+    this.searchTerm = ko.observable("");
+
+    // Initializes a blank array for locations
+    this.locationList = ko.observableArray([]);
+
+    // Error handling if map doesn't load.
+    this.errorHandlingMap = setTimeout(function(){
+        $('#map').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
+    }, 8000);
 
     // Create a styles array to use with the map.
     var styles = [{
@@ -196,15 +213,6 @@ function viewModel(){
         "stylers": [{"color": "#a2daf2"}]
     }];
 
-    this.searchTerm = ko.observable("");
-
-    this.locationList = ko.observableArray([]);
-
-    // Error handling if map doesn't load.
-    this.errorHandlingMap = setTimeout(function(){
-        $('#map').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
-    }, 8000);
-
     // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 41.970329, lng: -87.678778},
@@ -221,10 +229,13 @@ function viewModel(){
         map.setCenter({lat: 41.970329, lng: -87.678778});
     };
 
+    // Pushes default locations array into new location list array
     defaultLocations.forEach(function(locationItem){
         self.locationList.push( new Location(locationItem));
     });
 
+    // Searches for what user typed in the input bar to the locationlist array.
+    // Only displaying the exact item results that user type if available in the locationlist array.
     this.filteredList = ko.computed( function() {
         var filter = self.searchTerm().toLowerCase();
         if (!filter) {
@@ -241,9 +252,6 @@ function viewModel(){
             });
         }
     }, self);
-
-    this.mapElem = document.getElementById('map');
-    this.mapElem.style.height = window.innerHeight - 50;
 }
 
 function startApp() {
