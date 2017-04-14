@@ -9,18 +9,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Displays Google Map -->
     <div class="map" id="map"></div>
     <!-- Search Bar -->
     <div class="search" id="search">
         <input placeholder="Search Your Place of Interest" class="search-box" id="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'" />
     </div>
     <!-- Center Map Button -->
-    <div class="loc-btn-large">
+    <div class="loc-btn-large" data-bind="click: centerMap">
         <i class="fa fa-compass fa-2x"></i>
     </div>
     <!-- List -->
-    <div class="list" id="list">
-        <h1 class="text-center">Results</h1>
+    <div class="list text-center" id="list">
+        <h1>Places</h1>
+        <hr>
         <ul class="results" id="results" data-bind="foreach: filteredList">
             <li class="place" id="place" data-bind="text: name, click: bounce"></li>
         </ul>

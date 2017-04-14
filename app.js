@@ -1,6 +1,7 @@
 /*******************************
  Global Variables & Default Locations
  *******************************/
+
 // Creates a global map marker
 var map;
 
@@ -11,7 +12,7 @@ var Location;
 var clientID;
 var clientSecret;
 
-// Default Locations when app is first run
+// Default Locations that are displayed on the map
 var defaultLocations = [
     {
         name: 'Winnemac Park',
@@ -57,6 +58,10 @@ Location = function(data) {
     this.phone = "";
 
     this.visible = ko.observable(true);
+
+    // Foursquare API settings
+    clientID = "YA5YCGZRA414QRZ2HR4GG24H5Y45LNSLO02Z1C3BJ3N4CCWH";
+    clientSecret = "X50UXR4JITKLCC5VBEERFFT5LMGTTHIROU1ZDEZBFWMJEITO";
 
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
 
@@ -200,7 +205,7 @@ function viewModel(){
     // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 41.970329, lng: -87.678778},
-        zoom: 13,
+        zoom: 16,
         styles: styles,
         mapTypeControl: false
     });
@@ -208,9 +213,10 @@ function viewModel(){
     // If map loads this will clear out the timeout error.
     clearTimeout(self.errorHandlingMap);
 
-    // Foursquare API settings
-    clientID = "YA5YCGZRA414QRZ2HR4GG24H5Y45LNSLO02Z1C3BJ3N4CCWH";
-    clientSecret = "X50UXR4JITKLCC5VBEERFFT5LMGTTHIROU1ZDEZBFWMJEITO";
+    // Centers map when compass is clicked on.
+    this.centerMap = function(){
+        map.setCenter({lat: 41.970329, lng: -87.678778});
+    };
 
     defaultLocations.forEach(function(locationItem){
         self.locationList.push( new Location(locationItem));
