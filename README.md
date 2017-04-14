@@ -1,7 +1,7 @@
 # Project 5: Neighborhood Map
 
 ## What It Is
-This Web Application showcases a Chicago neighborhood with 5 default markers provided with more information when clicked.
+This Web Application showcases a Chicago neighborhood with 7 default markers provided with more information when clicked.
 
 ## Features
 Filter locations: Includes a text input field or dropdown menu that filters the map markers and list items to locations
@@ -11,6 +11,8 @@ List View: A list-view of location names is provided which displays all location
 subset of locations when a filter is applied. Clicking a location on the list displays unique information about the
 location, and animates its associated map marker by bouncing.
 
+Center Map: A compass icon that whenever clicked on reverts user back to the main focus of the map.
+
 
 ## Required Libraries and Dependencies
 **** Everything is already included (Device and Browser is your responsibility!) ****
@@ -18,7 +20,7 @@ location, and animates its associated map marker by bouncing.
 * Internet Connected Device
 * Modern Web Browser
 * Google Maps API
-* Yelp API
+* Foursquare API
 * Knockout JS
 * jQuery
 * Bootstrap
@@ -29,7 +31,7 @@ This project consists the following files and directories:
 * `index.html` - The main html file that displays the map and is attached to all of the js scripts and stylesheets.
 * `styles.css` - CSS file that contains all of the styles for the web app.
 * `README.md` - This read me file.
-* `app.js` - Javascript file that contains the Google Maps API, Yelp API and Knockout JS code.
+* `app.js` - Javascript file that contains the Google Maps API, Foursquare API and Knockout JS code.
 
 
 ## Credits:
