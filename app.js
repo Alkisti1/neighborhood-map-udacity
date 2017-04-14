@@ -203,7 +203,7 @@ function viewModel(){
     // Error handling if map doesn't load.
     this.errorHandlingMap = setTimeout(function(){
         $('#map').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
-    });
+    }, 8000);
 
     // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
