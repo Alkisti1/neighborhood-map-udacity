@@ -32,6 +32,14 @@ This project consists the following files and directories:
 * `README.md` - This read me file.
 * `app.js` - Javascript file that contains the Google Maps API, Foursquare API and Knockout JS code.
 
+## Basic Instructions
+1. Download the zip to a directory you'll be working in.
+2. Unzip the file.
+3. Open the index.html in a modern browser.
+4. Click markers or list items to select a location and retrieve info about it.
+5. Type into the filter/search box to filter the shown locations.
+6. Click 'show' or 'hide' on top of the list to collapse or expand the list.
+
 ## Credits:
 * Mike Fowler for Google Maps Apple-inspired CSS: https://snazzymaps.com/style/42/apple-maps-esque
 

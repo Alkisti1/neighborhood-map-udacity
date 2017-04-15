@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Neighborhood Map</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
     <div class="map" id="map"></div>
     <!-- Search -->
     <div class="search" id="search">
-        <input placeholder="Search Your Place of Interest" class="search-box" id="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'" />
+        <input placeholder="Search Your Place of Interest" class="search-box" id="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'">
     </div>
     <!-- Center Map Button -->
     <div class="loc-btn-large" data-bind="click: centerMap">
@@ -21,16 +21,19 @@
     </div>
     <!-- List -->
     <div class="list text-center" id="list">
-        <h1>Places</h1>
-        <hr>
-        <ul class="results" id="results" data-bind="foreach: filteredList">
-            <li class="place" id="place" data-bind="text: name, click: bounce"></li>
-        </ul>
+        <span class="toggler" data-bind="text: toggleSymbol, click: listToggle">hide</span>
+        <div data-bind="visible: toggleSymbol() === 'hide'">
+            <h1>Places</h1>
+            <hr>
+            <ul class="results" id="results" data-bind="visible: toggleSymbol() === 'hide', foreach: filteredList">
+                <li class="place" id="place" data-bind="text: name, click: bounce"></li>
+            </ul>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCtiyQRuWb9RKoFWc5m85G5Hs5gfS-Mop8&v=3&callback=startApp"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCtiyQRuWb9RKoFWc5m85G5Hs5gfS-Mop8&v=3&callback=startApp" onerror="errorHandlingMap()"></script>
 </body>
 </html>

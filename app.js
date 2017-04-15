@@ -52,17 +52,17 @@ Location = function(data) {
     this.name = data.name;
     this.lat = data.lat;
     this.long = data.long;
-    this.URL = "";
-    this.street = "";
-    this.city = "";
-    this.phone = "";
+    this.URL = '';
+    this.street = '';
+    this.city = '';
+    this.phone = '';
 
     // By default every marker will be visible
     this.visible = ko.observable(true);
 
     // Foursquare API credentials.
-    clientID = "YA5YCGZRA414QRZ2HR4GG24H5Y45LNSLO02Z1C3BJ3N4CCWH";
-    clientSecret = "X50UXR4JITKLCC5VBEERFFT5LMGTTHIROU1ZDEZBFWMJEITO";
+    clientID = 'YA5YCGZRA414QRZ2HR4GG24H5Y45LNSLO02Z1C3BJ3N4CCWH';
+    clientSecret = 'X50UXR4JITKLCC5VBEERFFT5LMGTTHIROU1ZDEZBFWMJEITO';
 
     // Foursquare API Link to call.
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat + ',' + this.long + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20170413' + '&query=' + this.name;
@@ -74,9 +74,9 @@ Location = function(data) {
         if (typeof self.URL === 'undefined') {
             self.URL = "";
         }
-        self.street = results.location.formattedAddress[0];
-        self.city = results.location.formattedAddress[1];
-        self.phone = results.contact.phone;
+        self.street = results.location.formattedAddress[0] || 'No Address Provided';
+        self.city = results.location.formattedAddress[1] || 'No Address Provided';
+        self.phone = results.contact.phone || 'No Phone Provided';
     }).fail(function () {
         $('.list').html('There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.');
     });
@@ -135,20 +135,18 @@ Location = function(data) {
 /*******************************
  Google Maps API
  *******************************/
-function viewModel(){
+function ViewModel(){
 
     var self = this;
 
+    //Holds value for list togglings
+    this.toggleSymbol = ko.observable('hide');
+
     // Search term is blank by default
-    this.searchTerm = ko.observable("");
+    this.searchTerm = ko.observable('');
 
     // Initializes a blank array for locations
     this.locationList = ko.observableArray([]);
-
-    // Error handling if map doesn't load.
-    this.errorHandlingMap = setTimeout(function(){
-        $('#map').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
-    }, 8000);
 
     // Create a styles array to use with the map.
     var styles = [{
@@ -221,12 +219,18 @@ function viewModel(){
         mapTypeControl: false
     });
 
-    // If map loads this will clear out the timeout error.
-    clearTimeout(self.errorHandlingMap);
-
     // Centers map when compass is clicked on.
     this.centerMap = function(){
         map.setCenter({lat: 41.970329, lng: -87.678778});
+    };
+
+    //toggles the list view
+    this.listToggle = function() {
+        if(self.toggleSymbol() === 'hide') {
+            self.toggleSymbol('show');
+        } else {
+            self.toggleSymbol('hide');
+        }
     };
 
     // Pushes default locations array into new location list array
@@ -254,6 +258,11 @@ function viewModel(){
     }, self);
 }
 
+// Error handling if map doesn't load.
+function errorHandlingMap() {
+    $('#map').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
+}
+
 function startApp() {
-    ko.applyBindings(new viewModel());
+    ko.applyBindings(new ViewModel());
 }
