@@ -1,7 +1,7 @@
 # Project 5: Neighborhood Map
 
 ## What It Is
-This Web Application showcases a Chicago neighborhood with 7 default markers provided with more information when clicked.
+This Web Application showcases a Chicago neighborhood with 7 default markers provided with more information when clicked
 
 ## Features
 Filter locations: Includes a text input field or dropdown menu that filters the map markers and list items to locations
